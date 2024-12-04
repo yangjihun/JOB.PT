@@ -18,11 +18,11 @@ driver.get('https://www.riss.kr/search/detail/DetailView.do?p_mat_type=1a0202e37
 # 페이지가 로딩될 때까지 기다리기 (예: 10초)
 wait = WebDriverWait(driver, 10)
 
-# 접힌 텍스트 추출 (확장 전)
-collapsed_text_xpath = '//*[@id="additionalInfoDiv"]/div/div[1]/div[2]/p'
-collapsed_text_element = wait.until(EC.presence_of_element_located((By.XPATH, collapsed_text_xpath)))
-collapsed_text = collapsed_text_element.text
-print("접힌 텍스트:", collapsed_text)
+# # 접힌 텍스트 추출 (확장 전)
+# collapsed_text_xpath = '//*[@id="additionalInfoDiv"]/div/div[1]/div[2]/p'
+# collapsed_text_element = wait.until(EC.presence_of_element_located((By.XPATH, collapsed_text_xpath)))
+# collapsed_text = collapsed_text_element.text
+# print("접힌 텍스트:", collapsed_text)
 
 # 텍스트 확장 버튼 클릭 (해당 버튼의 XPath)
 expand_button_xpath = '//*[@id="additionalInfoDiv"]/div/div[1]/a'

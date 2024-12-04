@@ -14,7 +14,7 @@ driver = webdriver.Chrome(service=service)
 
 # 웹 페이지 열기
 driver.get('https://www.riss.kr/search/detail/DetailView.do?p_mat_type=1a0202e37d52c72d&control_no=98bfef90e76549d1ffe0bdc3ef48d419&keyword=%EA%B8%88%EC%9C%B5')
-
+# 안녕하세요
 # 페이지가 로딩될 때까지 기다리기 (예: 10초)
 wait = WebDriverWait(driver, 10)
 

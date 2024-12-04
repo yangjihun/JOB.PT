@@ -6,8 +6,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 import time
 
-# test 용 commit해보기
-
 # ChromeDriver 자동 설치 및 경로 설정
 service = Service(ChromeDriverManager().install())
 

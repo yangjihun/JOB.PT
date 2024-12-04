@@ -1,63 +1,42 @@
-import requests
-from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from webdriver_manager.chrome import ChromeDriverManager
 import time
 
-# RISS 검색 URL
-BASE_URL = "https://www.riss.kr/search/Search.do"
+# ChromeDriver 자동 설치 및 경로 설정
+service = Service(ChromeDriverManager().install())
 
-# 검색어 입력
-search_query = "금융"
+# Chrome 드라이버 초기화
+driver = webdriver.Chrome(service=service)
 
-# 검색 요청 파라미터 설정
-params = {
-    "query": search_query,
-    "searchGubun": "true",
-    "colName": "re_a_kor",
-    "isDetailSearch": "N",
-}
+# 웹 페이지 열기
+driver.get('https://www.riss.kr/search/detail/DetailView.do?p_mat_type=1a0202e37d52c72d&control_no=98bfef90e76549d1ffe0bdc3ef48d419&keyword=%EA%B8%88%EC%9C%B5')
 
-# 검색 결과 가져오기
-response = requests.get(BASE_URL, params=params)
-response.raise_for_status()
-soup = BeautifulSoup(response.text, "html.parser")
+# 페이지가 로딩될 때까지 기다리기 (예: 10초)
+wait = WebDriverWait(driver, 10)
 
-# 검색 결과 추출
-results = soup.find_all("div", class_="cont")  # 검색 결과가 포함된 태그
-if not results:
-    print("No results found.")
-    exit()
+# # 접힌 텍스트 추출 (확장 전)
+# collapsed_text_xpath = '//*[@id="additionalInfoDiv"]/div/div[1]/div[2]/p'
+# collapsed_text_element = wait.until(EC.presence_of_element_located((By.XPATH, collapsed_text_xpath)))
+# collapsed_text = collapsed_text_element.text
+# print("접힌 텍스트:", collapsed_text)
 
-# 첫 5개 논문 정보 추출
-for i, result in enumerate(results[:5]):
-    try:
-        # 논문 제목
-        title = result.find("p", class_="title").text.strip()
+# 텍스트 확장 버튼 클릭 (해당 버튼의 XPath)
+expand_button_xpath = '//*[@id="additionalInfoDiv"]/div/div[1]/a'
+expand_button = wait.until(EC.element_to_be_clickable((By.XPATH, expand_button_xpath)))
+expand_button.click()  # 버튼 클릭
 
-        # 논문 저자
-        author = result.find("span", class_="writer").text.strip() if result.find("span", class_="writer") else "Unknown"
+# 페이지가 업데이트 될 때까지 잠시 대기 (예: 2초)
+time.sleep(2)
 
-        # 상세 페이지 URL
-        detail_link = result.find("p", class_="title").find("a")["href"]
-        if not detail_link.startswith("http"):
-            detail_link = "https://www.riss.kr" + detail_link
+# 열려진 텍스트 추출 (확장 후)
+expanded_text_xpath = '//*[@id="additionalInfoDiv"]/div/div[1]/div[3]/p'
+expanded_text_element = wait.until(EC.presence_of_element_located((By.XPATH, expanded_text_xpath)))
+expanded_text = expanded_text_element.text
+print("열린 텍스트:", expanded_text)
 
-        # 상세 페이지에서 초록 가져오기
-        time.sleep(1)  # 요청 간 간격 유지
-        detail_response = requests.get(detail_link)
-        detail_response.raise_for_status()
-        detail_soup = BeautifulSoup(detail_response.text, "html.parser")
-
-        # BeautifulSoup로 초록 추출
-        abstract_div = detail_soup.find("div", class_="text off")  # CSS Selector로 추출
-        abstract_text = abstract_div.text.strip() if abstract_div else "Abstract not available."
-
-        # 출력
-        print(f"\nResult {i + 1}")
-        print(f"Title: {title}")
-        print(f"Author: {author}")
-        print(f"Abstract: {abstract_text}")
-        print(f"URL: {detail_link}")
-
-    except Exception as e:
-        print(f"Error fetching result {i + 1}: {e}")
-
+# 브라우저 종료
+driver.quit()

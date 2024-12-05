@@ -11,7 +11,7 @@ import time
 service = Service(ChromeDriverManager().install())
 driver = webdriver.Chrome(service=service)
 
-# RISS 사이트로 이동
+# RISS 사이트 접속
 driver.get('https://www.riss.kr/')
 print("RISS 사이트 접속 완료")
 
@@ -63,53 +63,67 @@ def get_paper_links():
         print(f"논문 요소 재탐색 실패: {e}")
         return []
 
-print("논문 목록 탐색 중...")
-paper_elements = get_paper_links()
+# 텍스트 파일 경로 설정
+file_path = "papers_info.txt"
 
-if paper_elements:
-    for i in range(min(5, len(paper_elements))):
-        try:
-            # 재탐색을 통해 요소를 새로 가져옴
-            paper_elements = get_paper_links()
-            paper = paper_elements[i]
-            title = paper.text
-            link = paper.get_attribute('href')
-            print(f"{i+1}. {title}\nLink: {link}\n")
+# 파일 열기 (쓰기 모드)
+with open(file_path, 'w', encoding='utf-8') as file:
+    # 파일에 헤더 추가 (선택 사항)
+    file.write("논문 제목과 초록 목록\n\n")
 
-            # 논문 페이지로 이동하여 초록 추출
-            driver.get(link)
-            print(f"논문 페이지 접속: {link}")
+    print("논문 목록 탐색 중...")
+    paper_elements = get_paper_links()
 
-            # 텍스트 확장 버튼 클릭
-            expand_button_xpath = '//*[@id="additionalInfoDiv"]/div/div[1]/a'
+    if paper_elements:
+        for i in range(min(5, len(paper_elements))):
             try:
-                expand_button = wait.until(EC.element_to_be_clickable((By.XPATH, expand_button_xpath)))
-                expand_button.click()
-                print("텍스트 확장 버튼 클릭")
-            except:
-                print("텍스트 확장 버튼 없음")
+                # 재탐색을 통해 요소를 새로 가져옴
+                paper_elements = get_paper_links()
+                paper = paper_elements[i]
+                title = paper.text
+                link = paper.get_attribute('href')
+                print(f"{i+1}. {title}\n")
 
-            # 초록 텍스트 추출
-            abstract_xpath = '//*[@id="additionalInfoDiv"]/div/div[1]/div[3]/p'
-            try:
-                abstract_element = wait.until(EC.presence_of_element_located((By.XPATH, abstract_xpath)))
-                abstract_text = abstract_element.text
-                print("초록:", abstract_text)
-            except:
-                print("초록을 찾을 수 없습니다.")
+                # 논문 페이지로 이동하여 초록 추출
+                driver.get(link)
+                print(f"논문 페이지 접속: {link}")
 
-            # 검색 결과 페이지로 돌아가기
-            driver.back()
-            print("검색 결과 페이지로 돌아옴")
+                # 텍스트 확장 버튼 클릭
+                expand_button_xpath = '//*[@id="additionalInfoDiv"]/div/div[1]/a'
+                try:
+                    expand_button = wait.until(EC.element_to_be_clickable((By.XPATH, expand_button_xpath)))
+                    expand_button.click()
+                    print("텍스트 확장 버튼 클릭")
+                except:
+                    print("텍스트 확장 버튼 없음")
 
-            # 페이지 로드 대기
-            time.sleep(2)
+                # 초록 텍스트 추출
+                abstract_xpath = '//*[@id="additionalInfoDiv"]/div/div[1]/div[3]/p'
+                try:
+                    abstract_element = wait.until(EC.presence_of_element_located((By.XPATH, abstract_xpath)))
+                    abstract_text = abstract_element.text
+                    print("초록:", abstract_text)
+                except:
+                    abstract_text = "초록을 찾을 수 없습니다."
+                    print("초록을 찾을 수 없습니다.")
 
-        except Exception as e:
-            print(f"논문 정보 가져오기 실패: {e}")
-else:
-    print("논문 목록을 찾을 수 없습니다.")
+                # 파일에 논문 제목과 초록 저장
+                file.write(f"{i+1}. {title}\n")
+                file.write(f"초록: {abstract_text}\n\n")
+
+                # 검색 결과 페이지로 돌아가기
+                driver.back()
+                print("검색 결과 페이지로 돌아옴")
+
+                # 페이지 로드 대기
+                time.sleep(2)
+
+            except Exception as e:
+                print(f"논문 정보 가져오기 실패: {e}")
+    else:
+        print("논문 목록을 찾을 수 없습니다.")
 
 # 크롬 드라이버 종료
 driver.quit()
 print("크롬 드라이버 종료")
+print(f"논문 제목과 초록 정보가 {file_path} 파일에 저장되었습니다.")

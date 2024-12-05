@@ -49,40 +49,64 @@ except Exception as e:
     print(f"'국내학술논문' 탭 클릭 실패: {e}")
     driver.quit()
     exit()
-
-# 상위 5개 논문 탐색 및 출력
+    
+# 페이지 순회 논문 탐색 및 출력
 paper_list_xpath = '//*[@id="divContent"]/div/div[2]/div/div[3]/div[2]/ul/li/div[2]/p/a'
+page_base_xpath = '//*[@id="divContent"]/div/div[2]/div/div[4]/a['
+page_index = 2  # 시작 페이지 (1번은 기본적으로 열려 있으므로 2부터 시작)
 
 def get_paper_links():
     """현재 페이지에서 논문 제목과 링크를 가져오는 함수"""
     try:
-        # 리스트 재탐색
         paper_elements = driver.find_elements(By.XPATH, paper_list_xpath)
         return paper_elements
     except Exception as e:
-        print(f"논문 요소 재탐색 실패: {e}")
+        print(f"논문 요소 탐색 실패: {e}")
         return []
+
+def go_to_page(page_number):
+    """지정된 페이지로 이동"""
+    global page_index
+    page_xpath = f"{page_base_xpath}{page_number}]"
+    try:
+        page_button = wait.until(EC.element_to_be_clickable((By.XPATH, page_xpath)))
+        page_button.click()
+        print(f"{page_number}번 페이지로 이동")
+        time.sleep(3)  # 페이지 로드 대기
+        page_index = page_number + 1  # 다음 페이지로 설정
+        return True
+    except Exception as e:
+        print(f"{page_number}번 페이지로 이동 실패: {e}")
+        return False
 
 # 텍스트 파일 경로 설정
 file_path = "papers_info.txt"
 
 # 파일 열기 (쓰기 모드)
 with open(file_path, 'w', encoding='utf-8') as file:
-    # 파일에 헤더 추가 (선택 사항)
     file.write("논문 제목과 초록 목록\n\n")
+    total_papers = 0
+    max_papers = 50  # 최대 논문 수 설정
 
-    print("논문 목록 탐색 중...")
-    paper_elements = get_paper_links()
+    print("논문 목록 탐색 시작...")
+    while total_papers < max_papers:
+        paper_elements = get_paper_links()
 
-    if paper_elements:
-        for i in range(min(5, len(paper_elements))):
+        if not paper_elements:
+            print("현재 페이지에서 논문 목록을 찾을 수 없습니다.")
+            break
+
+        for i in range(len(paper_elements)):
+            if total_papers >= max_papers:
+                break
+
             try:
                 # 재탐색을 통해 요소를 새로 가져옴
                 paper_elements = get_paper_links()
                 paper = paper_elements[i]
                 title = paper.text
                 link = paper.get_attribute('href')
-                print(f"{i+1}. {title}\n")
+                print(f"{total_papers + 1}. {title}\n")
 
                 # 논문 페이지로 이동하여 초록 추출
                 driver.get(link)
@@ -108,8 +132,10 @@ with open(file_path, 'w', encoding='utf-8') as file:
                     print("초록을 찾을 수 없습니다.")
 
                 # 파일에 논문 제목과 초록 저장
-                file.write(f"{i+1}. {title}\n")
+                file.write(f"{total_papers + 1}. {title}\n")
                 file.write(f"초록: {abstract_text}\n\n")
+
+                total_papers += 1
 
                 # 검색 결과 페이지로 돌아가기
                 driver.back()
@@ -120,8 +146,13 @@ with open(file_path, 'w', encoding='utf-8') as file:
 
             except Exception as e:
                 print(f"논문 정보 가져오기 실패: {e}")
-    else:
-        print("논문 목록을 찾을 수 없습니다.")
+                continue
+
+        # 다음 페이지로 이동
+        if total_papers < max_papers:
+            if not go_to_page(page_index):
+                print("더 이상 다음 페이지가 없습니다.")
+                break
 
 # 크롬 드라이버 종료
 driver.quit()

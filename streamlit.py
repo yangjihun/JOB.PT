@@ -1,15 +1,20 @@
+import os
+import json
+import random
+import requests
 import streamlit as st
 from openai import OpenAI
-import json
-import base64  # GIF 추가를 위해 필요
-import time  # 시간 지연을 위해 사용
 from bs4 import BeautifulSoup
-import requests
-import random
+from dotenv import load_dotenv
 
+# .env 파일 로드
+load_dotenv()
+
+# 환경 변수에서 API 키를 읽어옴
+api_key = os.getenv("OPENAI_API_KEY")
 
 # OpenAI 클라이언트 생성
-client = OpenAI(api_key="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")
+client = OpenAI(api_key=api_key)
 
 # Streamlit 인터페이스 구성
 st.title("JOB.PT")

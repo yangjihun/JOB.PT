@@ -1,42 +1,32 @@
 import streamlit as st
 from openai import OpenAI
 import json
-import time
-from PIL import Image
 
 # OpenAI 클라이언트 생성
 client = OpenAI(api_key="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")
 
-# Streamlit 앱 타이틀 설정
-st.title("사회 트렌드와 관련 직업 추천 시스템")
+# Streamlit 인터페이스 구성
+st.title("직업 추천 및 필요 역량 분석")
+st.sidebar.header("사용자 입력")
+q = st.sidebar.text_input("분야를 입력하세요", "")
 
-# 사용자 입력: 분야 선택
-q = st.text_input("분야를 입력하세요:")
+if q:
+    # 파일 로드
+    try:
+        with open("data.txt", "r", encoding="utf-8") as file:
+            trend = file.read()
+        with open("News.txt", "r", encoding="utf-8") as file:
+            News = file.read()
+    except FileNotFoundError:
+        st.error("데이터 파일을 찾을 수 없습니다. 'data.txt'와 'News.txt'가 필요합니다.")
+        st.stop()
 
-# 파일 업로드: 데이터 파일과 뉴스 파일을 업로드
-uploaded_trend = st.file_uploader("사회 트렌드 데이터 업로드", type=["txt"])
-uploaded_news = st.file_uploader("뉴스 파일 업로드", type=["txt"])
+    # 결과 저장용 리스트
+    answers = []
 
-# 로딩 gif 표시
-def show_loading():
-    gif = Image.open("loading.gif")
-    st.image(gif, use_column_width=True, caption="로딩 중... 잠시만 기다려 주세요.")
-
-# 결과 저장용 리스트
-answers = []
-
-# 파일이 업로드되었을 경우 처리
-if uploaded_trend and uploaded_news:
-    # 로딩 gif 시작
-    show_loading()
-
-    # 파일 내용 읽기
-    trend = uploaded_trend.read().decode("utf-8")
-    News = uploaded_news.read().decode("utf-8")
-
-    # 5회 반복 실행 (Self-Consistency)
+    st.write("**Self-Consistency 실행 중...**")
     for i in range(3):
-        # 첫 번째 요청: 사회 트렌드와 분야의 연관성을 분석
+        # 첫 번째 요청
         response1 = client.chat.completions.create(
             model="gpt-4o-mini",
             response_format={ "type": "json_object" },
@@ -47,7 +37,7 @@ if uploaded_trend and uploaded_news:
         )
         result1 = response1.choices[0].message.content
 
-        # 두 번째 요청: 중간 결과를 활용하여 직업을 추천
+        # 두 번째 요청
         response2 = client.chat.completions.create(
             model="gpt-4o-mini",
             response_format={ "type": "json_object" },
@@ -57,12 +47,11 @@ if uploaded_trend and uploaded_news:
             ]
         )
         result2 = response2.choices[0].message.content
-        
         result2 = json.loads(result2)
         answers.append(result2["직업"])
 
-    # 최종 결과: 가장 많이 나온 직업과 필요한 역량 분석
-    response_final = client.chat.completions.create(
+    # 최종 요청
+    response = client.chat.completions.create(
         model="gpt-4o-mini",
         response_format={ "type": "json_object" },
         messages=[
@@ -71,22 +60,7 @@ if uploaded_trend and uploaded_news:
         ]   
     )
 
-    result_final = response_final.choices[0].message.content
-
-    # 로딩 화면이 끝난 후 결과 출력
-    st.subheader("최종 추천 직업과 필요 역량")
-    result = json.loads(result_final)
-
-    # 직업과 필요 역량을 예쁘게 출력
-    st.write("**추천 직업**")
-    st.write(f"1. {result['직업'][0]}")
-    st.write(f"2. {result['직업'][1]}")
-    st.write(f"3. {result['직업'][2]}")
-
-    st.write("**필요 역량**")
-    st.write(f"1. {result['필요역량'][0]}")
-    st.write(f"2. {result['필요역량'][1]}")
-    st.write(f"3. {result['필요역량'][2]}")
-
-else:
-    st.warning("사회 트렌드 파일과 뉴스 파일을 업로드해 주세요.")
+    # 결과 출력
+    result = response.choices[0].message.content
+    st.success("Self-Consistency를 통한 최종 분석 결과:")
+    st.json(json.loads(result))

@@ -3,7 +3,7 @@ import streamlit as st
 # ID와 비밀번호 설정
 USER_CREDENTIALS = {"roy": "1012", "user1": "mypassword"}
 
-# 인증 상태 확인
+# 인증 상태 초기화
 if "authenticated" not in st.session_state:
     st.session_state["authenticated"] = False
 
@@ -23,8 +23,8 @@ if not st.session_state["authenticated"]:
     if st.button("로그인"):
         login(username, password)
 else:
-    # 로그인 성공 시 보여줄 내용
+    # 로그인 성공 시 화면
     st.title("Streamlit 애플리케이션")
-    st.write("여기에 애플리케이션 내용을 작성하세요.")
+    st.write("환영합니다! 여기에 애플리케이션 내용을 작성하세요.")
     if st.button("로그아웃"):
         st.session_state["authenticated"] = False

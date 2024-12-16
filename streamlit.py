@@ -1,4 +1,5 @@
 import os
+import re
 import json
 import random
 import requests
@@ -10,6 +11,7 @@ from kbs_crolling import search_kbs_news
 from mbc_crolling import search_mbc_news
 from sbs_crolling import search_sbs_news
 from crolling import data_crawl
+from job_crawl import crawl_jobkorea
 
 # .env 파일 로드
 load_dotenv()
@@ -30,11 +32,11 @@ if not q:
 else:
     # 파일 로드 | 이 부분을 기사와 연결지어서 조인하면 될 듯 !
     try:
-        data_crawl(q) # 논문 불러오기
-        kbs_news = search_kbs_news(q, max_results=15)  # KBS 뉴스 크롤링
-        mbc_news = search_mbc_news(q, max_news=15)  # MBC 뉴스 크롤링
-        sbs_news = search_sbs_news(q, total_news=15)  # SBS 뉴스 크롤링
-        # kbs, mbc, sbs 각 3개의 txt
+        # data_crawl(q) # 논문 불러오기
+        # kbs_news = search_kbs_news(q, max_results=15)  # KBS 뉴스 크롤링
+        # mbc_news = search_mbc_news(q, max_news=15)  # MBC 뉴스 크롤링
+        # sbs_news = search_sbs_news(q, total_news=15)  # SBS 뉴스 크롤링
+        # # kbs, mbc, sbs 각 3개의 txt
         with open("data.txt", "r", encoding="utf-8") as file:
             trend = file.read()
         with open("news.txt", "r", encoding="utf-8") as file:
@@ -90,6 +92,8 @@ else:
         )
         result1 = response1.choices[0].message.content
 
+        print("11111", result1)      # 학습 출력물
+
         # 두 번째 요청 / 뉴스 기반
         response2 = client.chat.completions.create(
             model="gpt-4o-mini",
@@ -102,6 +106,8 @@ else:
         result2 = response2.choices[0].message.content
         result2 = json.loads(result2)
         answers.append(result2["직업"])
+
+        print("22222",result2)      # 두번째 학습 출력물
 
         # 진행률 업데이트
         progress_bar.progress(int((i + 1) * 33))  # 3단계로 진행을 나누어 퍼센트 업데이트 (33, 66, 100)
@@ -119,6 +125,8 @@ else:
     # 결과 출력
     result = json.loads(response.choices[0].message.content)
 
+    print("33333",result)       # 세번째 출력물
+
     # 로딩 상태 제거
     loading_placeholder.empty()  # GIF 제거
     text_placeholder.empty()  # 텍스트 제거
@@ -130,9 +138,24 @@ else:
     st.write("### 추천 직업")
     for job, skill in zip(result["직업"], result["필요역량"]):
         st.markdown(f"- **직업**: {job}  <br>  **필요 역량**: {skill}", unsafe_allow_html=True)
+        job_list = crawl_jobkorea(job)
+        # print(job_list)
+    # # 선택적으로 JSON 전체 출력
+    # st.write("### Raw JSON 결과 (Optional)")
+    # st.json(result)
 
-    # 선택적으로 JSON 전체 출력
-    st.write("### Raw JSON 결과 (Optional)")
-    st.json(result)
+    st.subheader("🔗 추천 직업 및 필요 역량 분석")
 
+    for job, skill in zip(result["직업"], result["필요역량"]):
+        st.markdown(f"#### **직업**: {job}")
+        st.markdown(f"- **필요 역량**: {skill}")
+        
+        # JobKorea 크롤링 데이터 표시
+        st.write("**관련 공고:**")
+        job_list = crawl_jobkorea(job)
+        if job_list:
+            for idx, job_info in enumerate(job_list, 1):
+                st.write(f"{idx}. [{job_info['title']}](<{job_info['link']}>)")
+        else:
+            st.write("관련 공고를 찾을 수 없습니다.")
 

@@ -86,7 +86,7 @@ def data_crawl(q):
     with open(file_path, 'w', encoding='utf-8') as file:
         file.write("논문 제목과 초록 목록\n\n")
         total_papers = 0
-        max_papers = 50  # 최대 논문 수 설정
+        max_papers = 10  # 최대 논문 수 설정
 
         print("논문 목록 탐색 시작...")
         while total_papers < max_papers:
@@ -114,8 +114,16 @@ def data_crawl(q):
                     # 텍스트 확장 버튼 클릭
                     expand_button_xpath = '//*[@id="additionalInfoDiv"]/div/div[1]/a'
                     try:
-                        expand_button = wait.until(EC.element_to_be_clickable((By.XPATH, expand_button_xpath)))
-                        expand_button.click()
+                        print("1")
+                        short_wait = WebDriverWait(driver, 0.5)  # 최대 2초만 대기
+                        print("2")
+                        try:
+                            ec = EC.element_to_be_clickable((By.XPATH, expand_button_xpath))
+                            expand_button = short_wait.until(ec)
+                            expand_button.click()
+                        except:
+                            print("error!!!!!!!")
+                        print("3")
                         print("텍스트 확장 버튼 클릭")
                     except:
                         print("텍스트 확장 버튼 없음")

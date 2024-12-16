@@ -81,36 +81,36 @@ else:
 
     # Self-Consistency 수행
     for i in range(3):
-        # 첫 번째 요청 / trend가 논문 정리
+        # 첫 번째 요청 / 기사 기반
         response1 = client.chat.completions.create(
             model="gpt-4o-mini",
             response_format={ "type": "json_object" },
             messages=[
                 {"role": "system", "content": "You are a helpful assistant designed to output JSON. Please write in Korean."},
-                {"role": "user", "content": f"사회 트렌드 분석 결과는 다음과 같습니다: {trend}. 이를 기반으로 '{q}'와 연관된 사회 트렌드를 분석하고, 중간 결과를 나타내시오."}
+                {"role": "user", "content": f"사회 트렌드 분석 결과는 다음과 같습니다: {news}. 이를 기반으로 '{q}'와 연관된 사회 트렌드를 분석하고, 중간 결과를 나타내시오."}
             ]
         )
         result1 = response1.choices[0].message.content
 
-        print("11111", result1)      # 학습 출력물
+        # print("11111", result1)      # 학습 출력물
 
-        # 두 번째 요청 / 뉴스 기반
+        # 두 번째 요청 / 논문 기반
         response2 = client.chat.completions.create(
             model="gpt-4o-mini",
             response_format={ "type": "json_object" },
             messages=[
                 {"role": "system", "content": "You are a helpful assistant designed to output JSON. Please write in Korean."},
-                {"role": "user", "content": f"이전 분석 결과는 다음과 같습니다: {result1}. 이를 기반으로 '{news}'의 내용을 참고하여 추천할 만한 관련 직업 3개를 명시하세요. 출력값은 다음과 같은 형식을 따르세요. {{'직업':[의사,회계사,작곡가]}}."}
+                {"role": "user", "content": f"이전 분석 결과는 다음과 같습니다: {result1}. 이를 기반으로 '{trend}'의 내용을 참고하여 추천할 만한 관련 직업 3개를 명시하세요. 출력값은 다음과 같은 형식을 따르세요. {{'직업':[의사,회계사,작곡가]}}."}
             ]
         )
         result2 = response2.choices[0].message.content
         result2 = json.loads(result2)
         answers.append(result2["직업"])
 
-        print("22222",result2)      # 두번째 학습 출력물
+        # print("22222",result2)      # 두번째 학습 출력물
 
         # 진행률 업데이트
-        progress_bar.progress(int((i + 1) * 33))  # 3단계로 진행을 나누어 퍼센트 업데이트 (33, 66, 100)
+        progress_bar.progress(int((i + 1) * 33)+1)  # 3단계로 진행을 나누어 퍼센트 업데이트 (33, 66, 100)
 
     # 최종 요청
     response = client.chat.completions.create(
@@ -125,7 +125,7 @@ else:
     # 결과 출력
     result = json.loads(response.choices[0].message.content)
 
-    print("33333",result)       # 세번째 출력물
+    # print("33333",result)       # 세번째 출력물
 
     # 로딩 상태 제거
     loading_placeholder.empty()  # GIF 제거

@@ -6,6 +6,10 @@ import streamlit as st
 from openai import OpenAI
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
+from kbs_crolling import search_kbs_news
+from mbc_crolling import search_mbc_news
+from sbs_crolling import search_sbs_news
+from crolling import data_crawl
 
 # .env 파일 로드
 load_dotenv()
@@ -24,21 +28,28 @@ q = st.sidebar.text_input("분야를 입력하세요", "")
 if not q:
     st.warning("분야를 입력해주세요!")  # 입력 유도가 없을 경우 메시지 출력
 else:
-    # 파일 로드
+    # 파일 로드 | 이 부분을 기사와 연결지어서 조인하면 될 듯 !
     try:
+        data_crawl(q) # 논문 불러오기
+        kbs_news = search_kbs_news(q, max_results=15)  # KBS 뉴스 크롤링
+        mbc_news = search_mbc_news(q, max_news=15)  # MBC 뉴스 크롤링
+        sbs_news = search_sbs_news(q, total_news=15)  # SBS 뉴스 크롤링
+        # kbs, mbc, sbs 각 3개의 txt
         with open("data.txt", "r", encoding="utf-8") as file:
             trend = file.read()
-        with open("News.txt", "r", encoding="utf-8") as file:
-            News = file.read()
+        with open("news.txt", "r", encoding="utf-8") as file:
+            news = file.read()
+
+
     except FileNotFoundError:
-        st.error("데이터 파일을 찾을 수 없습니다. 'data.txt'와 'News.txt'가 필요합니다.")
+        st.error("데이터 파일을 찾을 수 없습니다. 'data.txt'와 'news.txt'가 필요합니다.")
         st.stop()
 
     # 결과 저장용 리스트
     answers = []
 
     # 랜덤으로 GIF URL 생성
-    random_number = random.randint(1, 30)  # 1부터 30까지의 랜덤 숫자
+    random_number = random.randint(1, 30)  # 1부터 30까지의 랜덤 숫자   
     gif_url = f"https://giphy.com/search/cat"
     
     # GIF 페이지에서 HTML을 가져오기
@@ -68,7 +79,7 @@ else:
 
     # Self-Consistency 수행
     for i in range(3):
-        # 첫 번째 요청
+        # 첫 번째 요청 / trend가 논문 정리
         response1 = client.chat.completions.create(
             model="gpt-4o-mini",
             response_format={ "type": "json_object" },
@@ -79,13 +90,13 @@ else:
         )
         result1 = response1.choices[0].message.content
 
-        # 두 번째 요청
+        # 두 번째 요청 / 뉴스 기반
         response2 = client.chat.completions.create(
             model="gpt-4o-mini",
             response_format={ "type": "json_object" },
             messages=[
                 {"role": "system", "content": "You are a helpful assistant designed to output JSON. Please write in Korean."},
-                {"role": "user", "content": f"이전 분석 결과는 다음과 같습니다: {result1}. 이를 기반으로 '{News}'의 내용을 참고하여 추천할 만한 관련 직업 3개를 명시하세요. 출력값은 다음과 같은 형식을 따르세요. {{'직업':[의사,회계사,작곡가]}}."}
+                {"role": "user", "content": f"이전 분석 결과는 다음과 같습니다: {result1}. 이를 기반으로 '{news}'의 내용을 참고하여 추천할 만한 관련 직업 3개를 명시하세요. 출력값은 다음과 같은 형식을 따르세요. {{'직업':[의사,회계사,작곡가]}}."}
             ]
         )
         result2 = response2.choices[0].message.content
@@ -123,3 +134,5 @@ else:
     # 선택적으로 JSON 전체 출력
     st.write("### Raw JSON 결과 (Optional)")
     st.json(result)
+
+

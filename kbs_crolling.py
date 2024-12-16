@@ -11,7 +11,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import time
 
 # 크롤러 함수 정의
-def crawl_kbs_news_with_id_pagination(keyword, max_results=15):
+def search_kbs_news(keyword, max_results=15):
     # ChromeOptions 설정 (옵션)
     chrome_options = Options()
     chrome_options.add_argument("--no-sandbox")
@@ -82,14 +82,14 @@ def crawl_kbs_news_with_id_pagination(keyword, max_results=15):
                 result["content"] = "기사 내용을 가져올 수 없습니다."
 
         # 결과를 텍스트 파일로 저장
-        with open("kbs.txt", "w", encoding="utf-8") as file:
+        with open("news.txt", "w", encoding="utf-8") as file:
             for result in results:
                 file.write(f"Title: {result['title']}\n")
                 file.write(f"Link: {result['link']}\n")
                 file.write(f"Content: {result['content']}\n")
                 file.write("-" * 50 + "\n")
 
-        print("크롤링이 완료되었습니다. 결과는 kbs.txt 파일에 저장되었습니다.")
+        print("작업이 완료되었습니다.")
 
     finally:
         # 크롤링이 끝나면 브라우저 종료
@@ -101,5 +101,5 @@ if __name__ == "__main__":
     max_results = 20  # 원하는 뉴스 개수를 지정 (예: 20개)
 
     # 크롤러 실행
-    crawl_kbs_news_with_id_pagination(keyword, max_results)
+    search_kbs_news(keyword, max_results)
 

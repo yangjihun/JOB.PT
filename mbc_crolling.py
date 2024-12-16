@@ -35,7 +35,7 @@ def search_mbc_news(keyword, max_news=23): #max_nerws=23 23개의 뉴스 (이 �
         news_count = 0
         page_number = 1  # 페이지 번호 초기화
 
-        with open("mbc.txt", "w", encoding="utf-8") as file:
+        with open("news.txt", "a", encoding="utf-8") as file:
             while news_count < max_news:
                 try:
                     news_list = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="result"]/div[2]/div/div[3]/ul')))

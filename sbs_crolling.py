@@ -1,8 +1,7 @@
 #SBS 크롤링(완료+파일생성)
-
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options   
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
@@ -11,105 +10,108 @@ from selenium.common.exceptions import TimeoutException, StaleElementReferenceEx
 from webdriver_manager.chrome import ChromeDriverManager
 import time
 
-# 사용자 입력으로 검색어 받기
-search_term = input("검색어를 입력하세요: ")
+def search_sbs_news(search_term, total_news=23, output_file="news.txt"):
+    """
+    SBS 뉴스 사이트에서 특정 검색어에 대한 뉴스를 크롤링하여 제목, 링크, 본문을 저장합니다.
 
-# Chrome 옵션 설정
-chrome_options = Options()
-chrome_options.add_argument("--start-maximized")  # 브라우저 최대화
+    Args:
+        search_term (str): 검색어
+        total_news (int): 크롤링할 뉴스 개수 (기본값: 23)
+        output_file (str): 결과 저장 파일명 (기본값: "sbs.txt")
+    """
+    # Chrome 옵션 설정
+    chrome_options = Options()
+    chrome_options.add_argument("--start-maximized")  # 브라우저 최대화
 
-# ChromeDriver 경로를 ChromeDriverManager로 자동 설정
-service = Service(ChromeDriverManager().install())
-driver = webdriver.Chrome(service=service, options=chrome_options)
+    # ChromeDriver 경로 설정
+    service = Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service, options=chrome_options)
 
-# WebDriverWait 설정
-wait = WebDriverWait(driver, 10)
+    # WebDriverWait 설정
+    wait = WebDriverWait(driver, 10)
 
-try:
-    # SBS 뉴스 페이지 열기
-    driver.get("https://news.sbs.co.kr/news/newsMain.do?plink=GNB&cooper=SBSNEWS")
+    try:
+        # SBS 뉴스 페이지 열기
+        driver.get("https://news.sbs.co.kr/news/newsMain.do?plink=GNB&cooper=SBSNEWS")
 
-    # 검색 버튼 클릭
-    search_button = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="header_search_input"]')))
-    search_button.click()
+        # 검색 버튼 클릭
+        search_button = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="header_search_input"]')))
+        search_button.click()
 
-    # 검색 창에 검색어 입력
-    search_bar = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="search-bar"]')))
-    search_bar.send_keys(search_term)
-    search_bar.send_keys(Keys.RETURN)  # Enter 키로 검색 실행
+        # 검색 창에 검색어 입력
+        search_bar = wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="search-bar"]')))
+        search_bar.send_keys(search_term)
+        search_bar.send_keys(Keys.RETURN)  # Enter 키로 검색 실행
 
-    # 뉴스 탭 클릭
-    news_tab = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id=\"tab\"]/ul/li[2]/a')))
-    news_tab.click()
+        # 뉴스 탭 클릭
+        news_tab = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id=\"tab\"]/ul/li[2]/a')))
+        news_tab.click()
 
-    # 체크 박스 활성화
-    check_box = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="check_box"]')))
-    check_box.click()
+        # 뉴스 크롤링 변수 초기화
+        news_count = 0
+        page_number = 1
 
-    # 뉴스 크롤링 변수 초기화
-    news_count = 0
-    total_news = 23 #예 23개의 뉴스 (이 값을 원하는 뉴스 갯수로 수정해주세요)
-    page_number = 1
-
-    # 결과 저장을 위한 파일 오픈
-    with open("sbs.txt", "w", encoding="utf-8") as file:
-        while news_count < total_news:
-            for idx in range(1, 11):  # 한 페이지당 10개의 뉴스
-                try:
-                    # 뉴스 제목과 링크 가져오기
-                    title_xpath = f'//*[@id="search-article"]/div/div[4]/ul/li[{idx}]/a/span[2]/strong'
-                    link_xpath = f'//*[@id="search-article"]/div/div[4]/ul/li[{idx}]/a'
-
-                    title = wait.until(EC.presence_of_element_located((By.XPATH, title_xpath))).text
-                    link = wait.until(EC.presence_of_element_located((By.XPATH, link_xpath))).get_attribute("href")
-
-                    print(f"{news_count + 1}: {title}")
-                    file.write(f"{news_count + 1}: {title}\n")
-
-                    # 각 뉴스 링크에 바로 접속
-                    driver.get(link)
-                    time.sleep(3)  # 페이지 로드 대기
-
-                    # 뉴스 본문 크롤링
+        # 결과 저장을 위한 파일 오픈
+        with open(output_file, "a", encoding="utf-8") as file:
+            while news_count < total_news:
+                for idx in range(1, 11):  # 한 페이지당 10개의 뉴스
                     try:
-                        article_body = wait.until(EC.presence_of_element_located((By.CLASS_NAME, "text_area"))).text
-                        if article_body:
-                            file.write(f"본문: {article_body}\n\n")  # 본문 일부만 저장 (200자 제한)
+                        # 뉴스 제목과 링크 가져오기
+                        title_xpath = f'//*[@id="search-article"]/div/div[4]/ul/li[{idx}]/a/span[2]/strong'
+                        link_xpath = f'//*[@id="search-article"]/div/div[4]/ul/li[{idx}]/a'
+
+                        title = wait.until(EC.presence_of_element_located((By.XPATH, title_xpath))).text
+                        link = wait.until(EC.presence_of_element_located((By.XPATH, link_xpath))).get_attribute("href")
+
+                        file.write(f"{news_count + 1}: {title}\n")
+
+                        # 각 뉴스 링크에 바로 접속
+                        driver.get(link)
+                        time.sleep(3)  # 페이지 로드 대기
+
+                        # 뉴스 본문 크롤링
+                        try:
+                            article_body = wait.until(EC.presence_of_element_located((By.CLASS_NAME, "text_area"))).text
+                            if article_body:
+                                file.write(f"본문: {article_body}\n\n")
+                        except TimeoutException:
+                            print("본문을 찾을 수 없습니다.")
+                            file.write("본문을 찾을 수 없습니다.\n\n")
+
+                        # 검색 결과 페이지로 복귀
+                        driver.back()
+                        time.sleep(2)
+
+                        news_count += 1
+                        if news_count >= total_news:
+                            break
+
+                    except (TimeoutException, StaleElementReferenceException):
+                        print(f"{news_count + 1}: 요소가 더 이상 유효하지 않습니다.")
+
+                # 다음 페이지로 이동
+                if news_count < total_news:
+                    try:
+                        next_button_xpath = f'//*[@id="search-article"]/div/div[5]/div/a[{page_number + 2}]'
+                        next_button = wait.until(EC.element_to_be_clickable((By.XPATH, next_button_xpath)))
+                        next_button.click()
+                        page_number += 1
+                        time.sleep(3)  # 페이지 로드 대기
                     except TimeoutException:
-                        print("본문을 찾을 수 없습니다.")
-                        file.write("본문을 찾을 수 없습니다.\n\n")
-
-                    # 검색 결과 페이지로 복귀
-                    driver.back()
-                    time.sleep(2)
-
-                    news_count += 1
-                    if news_count >= total_news:
+                        print("더 이상 다음 페이지가 없습니다.")
                         break
 
-                except (TimeoutException, StaleElementReferenceException):
-                    print(f"{news_count + 1}: 요소가 더 이상 유효하지 않습니다.")
+    except TimeoutException:
+        print("\n요소를 찾지 못했습니다. 페이지 로드 상태를 확인하거나 XPATH를 점검하세요.")
 
-                print("-" * 50)
+    finally:
+        # 브라우저 닫기
+        driver.quit()
+        print(f"작업이 완료되었습니다.")
 
-            # 다음 페이지로 이동
-            if news_count < total_news:
-                try:
-                    next_button_xpath = f'//*[@id="search-article"]/div/div[5]/div/a[{page_number + 2}]'
-                    next_button = wait.until(EC.element_to_be_clickable((By.XPATH, next_button_xpath)))
-                    next_button.click()
-                    page_number += 1
-                    time.sleep(3)  # 페이지 로드 대기
-                except TimeoutException:
-                    print("더 이상 다음 페이지가 없습니다.")
-                    break
-
-except TimeoutException:
-    print("\n요소를 찾지 못했습니다. 페이지 로드 상태를 확인하거나 XPATH를 점검하세요.")
-
-finally:
-    # 브라우저 닫기
-    driver.quit()
-    print("크롤링이 완료되었습니다. 결과는 sbs.txt 파일에 저장되었습니다.")
+# 함수 호출 예시
+if __name__ == "__main__":
+    search_term = input("검색어를 입력하세요: ")
+    search_sbs_news(search_term, total_news=23, output_file="sbs.txt")
 
 

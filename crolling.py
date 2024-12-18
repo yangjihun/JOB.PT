@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -8,9 +9,19 @@ from webdriver_manager.chrome import ChromeDriverManager
 import time
 
 def data_crawl(q):
+
+    # Chrome 옵션 설정
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")  # GUI 없는 환경에서 필수
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--disable-gpu")  # GPU 사용 비활성화
+    chrome_options.add_argument("--window-size=1920x1080")  # 가상 디스플레이 설정
+
     # Chrome 드라이버 자동 설치 및 경로 설정
     service = Service(ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=service)
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+    
 
     # RISS 사이트 접속
     driver.get('https://www.riss.kr/')

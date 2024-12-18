@@ -10,14 +10,14 @@ from selenium.common.exceptions import TimeoutException, StaleElementReferenceEx
 from webdriver_manager.chrome import ChromeDriverManager
 import time
 
-def search_sbs_news(search_term, total_news=5, output_file="news.txt"):
+def search_sbs_news(search_term, total_news=5, output_file="News.txt"):
     """
     SBS 뉴스 사이트에서 특정 검색어에 대한 뉴스를 크롤링하여 제목, 링크, 본문을 저장합니다.
 
     Args:
         search_term (str): 검색어
         total_news (int): 크롤링할 뉴스 개수 (기본값: 23)
-        output_file (str): 결과 저장 파일명 (기본값: "sbs.txt")
+        output_file (str): 결과 저장 파일명 (기본값: "News.txt")
     """
     # Chrome 옵션 설정
     chrome_options = Options()
@@ -108,10 +108,5 @@ def search_sbs_news(search_term, total_news=5, output_file="news.txt"):
         # 브라우저 닫기
         driver.quit()
         print(f"작업이 완료되었습니다.")
-
-# 함수 호출 예시
-if __name__ == "__main__":
-    search_term = input("검색어를 입력하세요: ")
-    search_sbs_news(search_term, total_news=23, output_file="sbs.txt")
 
 

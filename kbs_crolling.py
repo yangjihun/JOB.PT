@@ -1,4 +1,4 @@
-#KBS 크롤링(완료+파일생성)
+#KBS 크롤링(완료+파일생성) 12-18 ㅅ
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -10,8 +10,17 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 
-# 크롤러 함수 정의
-def search_kbs_news(keyword, max_results=15):
+def search_kbs_news(keyword, max_results):
+    """
+    KBS 뉴스 웹사이트에서 지정된 키워드로 뉴스를 검색하고 결과를 크롤링하여 파일로 저장합니다.
+
+    Parameters:
+        keyword (str): 검색할 키워드
+        max_results (int): 최대 크롤링할 뉴스 개수
+
+    Returns:
+        None
+    """
     # ChromeOptions 설정 (옵션)
     chrome_options = Options()
     chrome_options.add_argument("--no-sandbox")
@@ -75,14 +84,14 @@ def search_kbs_news(keyword, max_results=15):
             driver.get(result["link"])
             time.sleep(2)  # 페이지 로드 대기
             try:
-                # 기사 내용 추출 예제
+                # 기사 내용 추출
                 content_element = driver.find_element(By.CLASS_NAME, "detail-body")  # 기사 내용이 들어있는 클래스명
-                result["content"] = content_element.text
+                result["content"] = content_element.text.strip()
             except Exception:
                 result["content"] = "기사 내용을 가져올 수 없습니다."
 
         # 결과를 텍스트 파일로 저장
-        with open("news.txt", "w", encoding="utf-8") as file:
+        with open("News.txt", "w", encoding="utf-8") as file:
             for result in results:
                 file.write(f"Title: {result['title']}\n")
                 file.write(f"Link: {result['link']}\n")
@@ -94,12 +103,3 @@ def search_kbs_news(keyword, max_results=15):
     finally:
         # 크롤링이 끝나면 브라우저 종료
         driver.quit()
-
-if __name__ == "__main__":
-    # 여기서 max_results를 설정하면 크롤링할 뉴스 개수를 제한할 수 있습니다.
-    keyword = input("검색할 키워드를 입력하세요: ")
-    max_results = 20  # 원하는 뉴스 개수를 지정 (예: 20개)
-
-    # 크롤러 실행
-    search_kbs_news(keyword, max_results)
-

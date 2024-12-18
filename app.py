@@ -1,11 +1,7 @@
 import os
-import re
 import json
-import random
-import requests
 import streamlit as st
 from openai import OpenAI
-from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 from kbs_crolling import search_kbs_news
 from mbc_crolling import search_mbc_news

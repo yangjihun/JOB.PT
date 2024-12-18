@@ -86,7 +86,7 @@ def data_crawl(q):
     with open(file_path, 'w', encoding='utf-8') as file:
         file.write("논문 제목과 초록 목록\n\n")
         total_papers = 0
-        max_papers = 50  # 최대 논문 수 설정
+        max_papers = 10  # 최대 논문 수 설정 !!!!!!
 
         print("논문 목록 탐색 시작...")
         while total_papers < max_papers:

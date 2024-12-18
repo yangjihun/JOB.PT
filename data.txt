@@ -1,0 +1,34 @@
+논문 제목과 초록 목록
+
+1. 스왑금융에 대한 소고 : 금융사고를 중심으로 Centered on the Lawsuit Cases
+초록: 초록 없음
+
+2. 금융기관의 지식경영 측정지표 중요도에 관한 실증적 연구 : AHP 분석을 활용한 금융기관의 BSC 관점별 가중치 도출
+초록: 본 연구는 금융기관의 지식경영 성과측정지표 개발의 세 번째 단계인 지식경영 측정지표중요도에 관한 실증적 연구이다. 첫 번째 단계는 금융기관의 지식경영 성과측정지표 모형개발을 통해 BSC 관점으로 요인들을 범주화 하고, 두 번째 단계는 BSC 4가지 관점의 인과관계 분석을 통해 측정지표를 구분하였다. 인과관계 분석을 통해 얻은 결과를 가지고 본 연구에서는 BSC 관점에서 각 수준별 측정지표들의 중요도와 가중치를 부여하기 위해 AHP 방식을 적용하였다. 연구결과 국내 금융기관에서는 BSC 4가지 관점 중 재무적 관점을 가장 중요하게 여기는 것으로 나타났으며 고객관점, 내부 프로세스, 학습 및 성장 순이었다. 재무관점 중에는 영업이익률 달성이 가장 높게 나타났으며 고객관점에서는 고객만족도, 내부프로세스는 비전체계의 이해 정도, 학습 및 성장관점에서는 업무기획력과 정보관리능력이 1, 2위로 나타났다. 연구결과의 활용으로는 기존의 성과지표 중 가중치가 없거나 혹은 임의로 책정했던 직관적인 오류에서 벗어나 계량적인 방식으로 측정할 수 있다는 것과 지식경영 담당자의 입장에서 일을 계획하고 처리함에 있어 일처리 순서와 중요도 따른 선택과 집중의 계획수립에 도움을 줄 수 있을 것으로 기대된다.
+
+3. 중소기업 금융의 현황과 과제 : 관계형 금융을 중심으로
+초록: 초록 없음
+
+4. 은행업권의 금융소비자보호 실태 평가
+초록: 본 연구는 17개 국내 시중은행이 자체 금융소비자종합포털에 공시한 내용을 분석하여 은행업권의 금융소비자보호 현황을 살펴보았다. 조사 결과, 각 은행이 자체적으로 운영하고 있는 온라인 금융소비자종합포털의 접근성은 매우 낮은 편이었으며, 은행 내 금융소비자보호 체계가 정상적으로 작동하고 있는지에 대해서 일반 금융소비자가 확인 할 수 없는 상황이었다. 또한, 모범규준에서 소비자보호 필수 안내사항으로 정한 내용이 포털에 제대로 공시되어 있지 않았으며, 취약계층 소비자 집단의 범위와 보호활동에 대한 은행의 인식 수준이 높지 않았다. 본 연구에서는 이상의 내용을 바탕으로 다음 네가지 사항에 대한 개선을 제안하였다. 첫째, 은행은 자체적으로 운영하고 있는 소비자 정보포털을 금융소비자와 은행 간 의사소통 창구로 적극 활용할 필요가 있다. 둘째, 금융소비자보호 모범규준에서 연중 금융소비자보호협의회 최소 개최 횟수(연 1회)를 정하는 방안에 대하여 논의할 필요가 있다. 셋째, 은행 내부의 상품개발 준칙과 상품판매 준칙에 대한 업무 담당자들의 인식을 살펴볼 필요가 있다. 넷째, 취약계층 금융소비자에 대한 은행의 책무를 명확히 할 필요가 있다. 본 연구의 결과는 은행업권의 소비자 지향성 제고 및 금융소비자보호 모범규준 개선을 위한 기초자료로 활용될 수 있다.
+
+5. 빅테크・핀테크 확산에 따른 금융안정 및 소비자보호 제고 방안
+초록: 초록 없음
+
+6. 심사논문 : 금융상품 소비자정보의 효과적인 제공방안에 대한 연구 -영국, 미국, 캐나다 사례를 중심으로-
+초록: 금융상품의 특성상 의사결정을 위해 필요한 정보의 종류와 양이 많고, 상품 자체가 복잡하다. 또한 빈번하게 구매하는 상품이 아니기 때문에 구매접점에서 제공되는 정보 혹은 외부 탐색 시에 제공되는 주요 정보가 효율적으로 제공되어야 할 필요가 있다. 또한 장기계약이 유지되는 경우가 많아 소비자의 피해가 즉각적으로 발생하는 것이 아니라 상품 구입 이후에 일정 시간이 흐른 뒤 발생하는 경우가 많은 것이 특징이다. 이는 직접적인 소비자 피해일 뿐만 아니라, 기업 측면에서는 불완전판매로 이어지는 경우로 금융시장 전반에 악영향을 끼칠 소지가 크다. 이를 예방하고 금융소비자를 보호할 수 있는 첫걸음은 소비자지향적인 금융상품정보를 제공하는 것으로 볼 수 있다. 본 연구는 국내에서 소비자중심적인 정보제공방안에 관한 논의를 위하여 영국, 미국, 캐나다 등 해외의 금융소비자정보 제공형태 관련 최신 연구들을 고찰하였다. 그리고 이를 통하여 금융상품정보 제공 시 중요하게 고려해야 할 점을 파악하고, 소비자중심적인 정보제공을 위한 구체적 방안을 모색하기 위한 제언을 하고자 하였다. 그 결과 상품 관련 많은 정보 중 필수적으로 소비자에게 전달되어야 하는 주요 특징 정보를 밝히고, 이를 효율적으로 전달할 수 있는 표 혹은 질문과 답변 형태의 구체적인 방안을 적용하는 것이 가능함을 확인하였다. 결국 소비자에게 금융상품정보를 효과적으로 전달하기 위해서는 내용과 형태를 함께 고려해야 하며, 소비자를 대상으로 정보전달 효과를 실질적으로 측정하는 등의 연구방법도 필요함을 제언하였다. 이러한 기초 연구를 통하여 국내 금융소비자정보 제공형태의 개선 방안을 도출 할 수 있을 것으로 기대한다.
+
+7. 복합금융그룹화가 금융그룹 및 소속금융회사의 기업가치에 미치는 효과
+초록: 초록 없음
+
+8. 금융감독체계 개편 : 어떻게 할 것인가?
+초록: 본 논문은 현행 한국 금융감독체계의 문제점을 진단하고 금융감독체계 개편방향을 제시하는 것을 목적으로 한다. 구체적으로 본 논문은 다음 네 가지 개편방향을 제안한다. 첫째, 그간 우리나라에서 금융감독이 정부의 경제 또는 금융산업 정책에 압도되어 독립성이 훼손되고 위상이 저하되어 감독의 부실 및 금융소비자 피해가 초래되었음을 감안하여, 금융의 산업정책과 감독정책을 분리한다. 둘째, 감독기구는 금융기관들의 건전성감독을 책임지는 금융건전성감독원(가칭)과 행위규제를 책임지는 금융시장감독원(가칭)으로 구분되는 소위 “쌍봉형(twin peaks) 체계”를 채택한다. 셋째, 감독업무의 독립성 확보와 전문성 제고를 위해서 감독기구는 민간 공적기구 형태의 설립을 원칙으로 한다. 넷째, 감독권 및 정보의 독점에서 발생하는 문제를 해결하기 위해서 개별 감독유관기관 고유의 감독권을 존중하는 범위 내에서 협력체제를 구축하고 거시건전성 감독 강화를 도모하기 위한 금융안정협의체(가칭) 법제화를 제안한다.
+
+9. 금융상품의 가격차별과 금융소비자보호를 위한 공정성 이슈 검토
+초록: 초록 없음
+
+10. 금융포용 향상을 위한 비금융 대안정보 활용의 법적 쟁점과 과제
+초록: This study aims to improve systems to promote financial inclusion through alternative credit scoring system(ACSS) using non-financial information. For this purpose, recent trends in financial inclusion in the global context and domestic policies and market trends are reviewed. Specifically, the main research subjects include understanding the domestic and international phenomena of financial inclusion, analyzing the legal issues in utilizing alternative credit data for financial inclusion.
+The research show that the development of the digital economy shifts from traditional model of Credit Scoring System(CSS) to Alternative Credit Scoring System(ACSS) using non-traditional data sources (e.g., social media behaviors, mobile phone data, and purchase history records in online marketplaces), which helps people who have insufficient credit history to create their credit score.
+Consequently, ACSS is identified as a key competitive advantage in enhancing financial inclusion. Additionally, the revision of related laws are necessary, and institutional improvement should be established to allow a number of fintech companies to participate in the ACSS, thereby further enhancing financial inclusion.
+

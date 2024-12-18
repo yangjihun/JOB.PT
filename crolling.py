@@ -86,7 +86,7 @@ def data_crawl(q):
     with open(file_path, 'w', encoding='utf-8') as file:
         file.write("논문 제목과 초록 목록\n\n")
         total_papers = 0
-        max_papers = 10  # 최대 논문 수 설정
+        max_papers = 50  # 최대 논문 수 설정
 
         print("논문 목록 탐색 시작...")
         while total_papers < max_papers:
@@ -111,31 +111,52 @@ def data_crawl(q):
                     driver.get(link)
                     print(f"논문 페이지 접속: {link}")
 
-                    # 텍스트 확장 버튼 클릭
                     expand_button_xpath = '//*[@id="additionalInfoDiv"]/div/div[1]/a'
-                    try:
-                        print("1")
-                        short_wait = WebDriverWait(driver, 0.5)  # 최대 2초만 대기
-                        print("2")
-                        try:
-                            ec = EC.element_to_be_clickable((By.XPATH, expand_button_xpath))
-                            expand_button = short_wait.until(ec)
-                            expand_button.click()
-                        except:
-                            print("error!!!!!!!")
-                        print("3")
-                        print("텍스트 확장 버튼 클릭")
-                    except:
-                        print("텍스트 확장 버튼 없음")
-
-                    # 초록 텍스트 추출
                     abstract_xpath = '//*[@id="additionalInfoDiv"]/div/div[1]/div[3]/p'
+
                     try:
+                        # 확장 버튼이 있는지 확인
+                        expand_button = driver.find_element(By.XPATH, expand_button_xpath)
+                        
+                        # 확장 버튼이 존재하면 클릭
+                        short_wait = WebDriverWait(driver, 1)  # 최대 1초만 대기
+                        ec = EC.element_to_be_clickable((By.XPATH, expand_button_xpath))
+                        expand_button = short_wait.until(ec)
+                        expand_button.click()  # 확장 버튼 클릭
+                        print("텍스트 확장 버튼 클릭")
+                        
+                        # 초록 텍스트 추출
                         abstract_element = wait.until(EC.presence_of_element_located((By.XPATH, abstract_xpath)))
                         abstract_text = abstract_element.text
-                    except:
-                        abstract_text = "초록을 찾을 수 없습니다."
-                        print("초록을 찾을 수 없습니다.")
+                    except Exception as e:
+                        # 확장 버튼이 없으면 초록 텍스트를 추출하지 않고 다음 논문으로 넘어감
+                        abstract_text = "초록 없음"
+                        print("텍스트 확장 버튼 없음, 초록을 추출할 수 없습니다. 오류:", e)
+
+                    # 여기서 추출한 abstract_text를 사용하여 후속 처리를 계속할 수 있습니다.
+
+
+                    # # 확장 버튼이 있는지 확인하고 클릭
+                    # try:
+                    #     short_wait = WebDriverWait(driver, 0.5)  # 최대 0.5초만 대기
+                    #     ec = EC.element_to_be_clickable((By.XPATH, expand_button_xpath))
+                    #     expand_button = short_wait.until(ec)
+                    #     expand_button.click()  # 확장 버튼 클릭
+                    #     print("텍스트 확장 버튼 클릭")
+
+                    #     # 확장 버튼 클릭 후 초록 텍스트 추출
+                    #     try:
+                    #         abstract_element = wait.until(EC.presence_of_element_located((By.XPATH, abstract_xpath)))
+                    #         abstract_text = abstract_element.text
+                    #     except:
+                    #         abstract_text = "초록을 찾을 수 없습니다."
+                    #         print("초록을 찾을 수 없습니다.")
+                            
+                    # except Exception as e:
+                    #     abstract_text = "확장 버튼 없음"
+                    #     print("텍스트 확장 버튼 없음, 초록을 추출할 수 없습니다:", e)
+
+                    # 초록 텍스트가 없는 경우의 처리는 위에서 설정
 
                     # 파일에 논문 제목과 초록 저장
                     file.write(f"{total_papers + 1}. {title}\n")
@@ -164,3 +185,5 @@ def data_crawl(q):
     driver.quit()
     print("크롬 드라이버 종료")
     print(f"논문 제목과 초록 정보가 {file_path} 파일에 저장되었습니다.")
+
+# data_crawl("금융")

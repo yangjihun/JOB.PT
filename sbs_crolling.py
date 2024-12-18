@@ -10,7 +10,7 @@ from selenium.common.exceptions import TimeoutException, StaleElementReferenceEx
 from webdriver_manager.chrome import ChromeDriverManager
 import time
 
-def search_sbs_news(search_term, total_news=23, output_file="news.txt"):
+def search_sbs_news(search_term, total_news=5, output_file="news.txt"):
     """
     SBS 뉴스 사이트에서 특정 검색어에 대한 뉴스를 크롤링하여 제목, 링크, 본문을 저장합니다.
 

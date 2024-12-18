@@ -21,7 +21,11 @@ def search_sbs_news(search_term, total_news=5, output_file="News.txt"):
     """
     # Chrome 옵션 설정
     chrome_options = Options()
-    chrome_options.add_argument("--start-maximized")  # 브라우저 최대화
+    chrome_options.add_argument("--headless")  # GUI 없는 환경에서 필수
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--disable-gpu")  # GPU 사용 비활성화
+    chrome_options.add_argument("--window-size=1920x1080")  # 가상 디스플레이 설정
 
     # ChromeDriver 경로 설정
     service = Service(ChromeDriverManager().install())

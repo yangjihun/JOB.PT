@@ -23,8 +23,11 @@ def search_kbs_news(keyword, max_results):
     """
     # ChromeOptions 설정 (옵션)
     chrome_options = Options()
+    chrome_options.add_argument("--headless")  # GUI 없는 환경에서 필수
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--disable-gpu")  # GPU 사용 비활성화
+    chrome_options.add_argument("--window-size=1920x1080")  # 가상 디스플레이 설정
 
     # 크롬 드라이버 자동 설치 및 설정
     service = Service(ChromeDriverManager().install())

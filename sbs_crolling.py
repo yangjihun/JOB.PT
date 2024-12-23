@@ -11,21 +11,10 @@ from webdriver_manager.chrome import ChromeDriverManager
 import time
 
 def search_sbs_news(search_term, total_news=5, output_file="News.txt"):
-    """
-    SBS 뉴스 사이트에서 특정 검색어에 대한 뉴스를 크롤링하여 제목, 링크, 본문을 저장합니다.
-
-    Args:
-        search_term (str): 검색어
-        total_news (int): 크롤링할 뉴스 개수 (기본값: 23)
-        output_file (str): 결과 저장 파일명 (기본값: "News.txt")
-    """
+    
     # Chrome 옵션 설정
     chrome_options = Options()
-    chrome_options.add_argument("--headless")  # GUI 없는 환경에서 필수
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--disable-gpu")  # GPU 사용 비활성화
-    chrome_options.add_argument("--window-size=1920x1080")  # 가상 디스플레이 설정
+    chrome_options.add_argument("--start-maximized")  # 브라우저 최대화
 
     # ChromeDriver 경로 설정
     service = Service(ChromeDriverManager().install())

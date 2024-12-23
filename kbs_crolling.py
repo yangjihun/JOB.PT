@@ -11,23 +11,10 @@ from selenium.webdriver.support import expected_conditions as EC
 import time
 
 def search_kbs_news(keyword, max_results):
-    """
-    KBS 뉴스 웹사이트에서 지정된 키워드로 뉴스를 검색하고 결과를 크롤링하여 파일로 저장합니다.
-
-    Parameters:
-        keyword (str): 검색할 키워드
-        max_results (int): 최대 크롤링할 뉴스 개수
-
-    Returns:
-        None
-    """
+    
     # ChromeOptions 설정 (옵션)
     chrome_options = Options()
-    chrome_options.add_argument("--headless")  # GUI 없는 환경에서 필수
     chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--disable-gpu")  # GPU 사용 비활성화
-    chrome_options.add_argument("--window-size=1920x1080")  # 가상 디스플레이 설정
 
     # 크롬 드라이버 자동 설치 및 설정
     service = Service(ChromeDriverManager().install())

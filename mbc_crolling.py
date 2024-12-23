@@ -10,13 +10,8 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 def search_mbc_news(keyword, max_news):
     chrome_options = Options()
-    chrome_options.add_argument("--headless")  # GUI 없는 환경에서 필수
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--disable-gpu")  # GPU 사용 비활성화
-    chrome_options.add_argument("--window-size=1920x1080")  # 가상 디스플레이 설정
-    # 필요에 따른 headless 모드 추가
-    # chrome_options.add_argument("--headless")
 
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=chrome_options)

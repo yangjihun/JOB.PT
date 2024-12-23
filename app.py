@@ -32,9 +32,10 @@ else:
         data_crawl(q) 
 
         # 3대 뉴스 크롤링
-        kbs_news = search_kbs_news(q, max_results=5)  # KBS 뉴스 크롤링
-        mbc_news = search_mbc_news(q, max_news=5)  # MBC 뉴스 크롤링
-        sbs_news = search_sbs_news(q, total_news=5)  # SBS 뉴스 크롤링
+        search_kbs_news(q, max_results=5)  # KBS 뉴스 크롤링
+        search_mbc_news(q, max_news=5)  # MBC 뉴스 크롤링
+        search_sbs_news(q, total_news=5)  # SBS 뉴스 크롤링
+        
         with open("data.txt", "r", encoding="utf-8") as file:
             trend = file.read()
         with open("news.txt", "r", encoding="utf-8") as file:

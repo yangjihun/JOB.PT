@@ -4,6 +4,7 @@ import openai
 import streamlit as st
 from openai import OpenAI
 from dotenv import load_dotenv
+from pathlib import Path
 from kbs_crolling import search_kbs_news
 from mbc_crolling import search_mbc_news
 from sbs_crolling import search_sbs_news
@@ -18,6 +19,16 @@ api_key = os.getenv("OPENAI_API_KEY")
 
 # OpenAI 클라이언트 생성
 client = OpenAI(api_key=api_key)
+
+PROMPTS_DIR = Path(__file__).resolve().parent / "prompts"
+
+def load_prompt(filename):
+    return (PROMPTS_DIR / filename).read_text(encoding="utf-8").strip()
+
+SYSTEM_PROMPT = load_prompt("system.txt")
+NEWS_PROMPT = load_prompt("news_trend_user.txt")
+JOB_PROMPT = load_prompt("job_recommend_user.txt")
+FINAL_PROMPT = load_prompt("final_user.txt")
 
 # Streamlit 인터페이스 구성
 st.title("JOB.PT")
@@ -70,8 +81,8 @@ else:
             model="gpt-4o-mini",
             response_format={ "type": "json_object" },
             messages=[
-                {"role": "system", "content": "You are a helpful assistant designed to output JSON. Please write in Korean."},
-                {"role": "user", "content": f"사회 트렌드 분석 결과는 다음과 같습니다: {news}. 이를 기반으로 '{q}'와 연관된 사회 트렌드를 분석하고, 중간 결과를 나타내시오."}
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content": NEWS_PROMPT.format(news=news, q=q)}
             ]
         )
         result1 = response1.choices[0].message.content
@@ -81,8 +92,8 @@ else:
             model="gpt-4o-mini",
             response_format={ "type": "json_object" },
             messages=[
-                {"role": "system", "content": "You are a helpful assistant designed to output JSON. Please write in Korean."},
-                {"role": "user", "content": f"이전 분석 결과는 다음과 같습니다: {result1}. 이를 기반으로 '{trend}'의 내용을 참고하여 추천할 만한 관련 직업 3개를 명시하세요. 출력값은 다음과 같은 형식을 따르세요. 단 직업을 구체적인 직업으로 추천해주세요. {{'직업':[의사,회계사,작곡가]}}."}
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content": JOB_PROMPT.format(result1=result1, trend=trend)}
             ]
         )
         result2 = response2.choices[0].message.content
@@ -98,8 +109,8 @@ else:
         model="gpt-4o-mini",
         response_format={ "type": "json_object" },
         messages=[
-            {"role": "system", "content": "You are a helpful assistant designed to output JSON. Please write in Korean."},
-            {"role": "user", "content": f"{answers}에 나온 9개의 직업중에서 가장 많이 나온 직업 3개를 뽑아주고, 각 직업에 대한 필요 역량을 답변하세요. 출력값은 다음과 같은 형식을 따르세요. {{'직업':[의사,회계사,작곡가], '필요역량':[의사자격증,수학지식,음악감각]}}. 직업[0]에 대한 필요역량은 필요역량[0]에 해당하는 방식이다."}
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": FINAL_PROMPT.format(answers=answers)}
         ]   
     )
 
